@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>GoSo Helper with python - y2sman&#39;s blog</title>
+
+<script data-ad-client="ca-pub-7336202012687130" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+    <meta name="description" content="개요어쩌다보니 디시인사이드의 게시글들 중 특정 키워드를 가진 게시글을 가져와서 PDF로 만드는 자동화 작업을 한 적이 있었다. 그렇다. 고소를 위한 증거 수집이다. 이번 게시글은 그때 만들었던 코드를 일부 수정한 버전이다. GoSo Helper?사이트의 특성상 게시글이 너무 많다. 하지만 게시판 별로 태그가 충실히 나뉘어 있으며, 글번호도 게시판마다 다르다">
+<meta name="keywords" content="Dev,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GoSo Helper with python">
+<meta property="og:url" content="http://y2sman.github.io/2019/12/30/2019_12_30/index.html">
+<meta property="og:site_name" content="y2sman&#39;s blog">
+<meta property="og:description" content="개요어쩌다보니 디시인사이드의 게시글들 중 특정 키워드를 가진 게시글을 가져와서 PDF로 만드는 자동화 작업을 한 적이 있었다. 그렇다. 고소를 위한 증거 수집이다. 이번 게시글은 그때 만들었던 코드를 일부 수정한 버전이다. GoSo Helper?사이트의 특성상 게시글이 너무 많다. 하지만 게시판 별로 태그가 충실히 나뉘어 있으며, 글번호도 게시판마다 다르다">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="http://y2sman.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2020-07-19T08:34:09.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GoSo Helper with python">
+<meta name="twitter:description" content="개요어쩌다보니 디시인사이드의 게시글들 중 특정 키워드를 가진 게시글을 가져와서 PDF로 만드는 자동화 작업을 한 적이 있었다. 그렇다. 고소를 위한 증거 수집이다. 이번 게시글은 그때 만들었던 코드를 일부 수정한 버전이다. GoSo Helper?사이트의 특성상 게시글이 너무 많다. 하지만 게시판 별로 태그가 충실히 나뉘어 있으며, 글번호도 게시판마다 다르다">
+<meta name="twitter:image" content="http://y2sman.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85201507-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85201507-2');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/og_image.png" alt="GoSo Helper with python" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="검색" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-29T18:14:07.000Z">2019-12-30</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Dev/">Dev</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5분 읽기 (나에 대하여 737 단어)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                GoSo Helper with python
+            
+        </h1>
+        <div class="content">
+            <h3 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h3><p>어쩌다보니 디시인사이드의 게시글들 중 특정 키워드를 가진 게시글을 가져와서 PDF로 만드는 자동화 작업을 한 적이 있었다. 그렇다. 고소를 위한 증거 수집이다. 이번 게시글은 그때 만들었던 코드를 일부 수정한 버전이다.</p>
+<h3 id="GoSo-Helper"><a href="#GoSo-Helper" class="headerlink" title="GoSo Helper?"></a>GoSo Helper?</h3><p>사이트의 특성상 게시글이 너무 많다. 하지만 게시판 별로 태그가 충실히 나뉘어 있으며, 글번호도 게시판마다 다르다. 그래서 크롤링 자체는 쉽다… 라고 말하려고 했는데, 공개를 위해 테스트를 해보니 작동하지 않았다…</p>
+<p>대충 이유를 찾아보니, 크롤러 방지용으로 User-Agent를 검사하는 기능이 추가된 것 같았다. 그래서 겸사겸사 수정하면서 개선버전을 만들었다. </p>
+<p>개선된 GoSo Helper는 기존의 PDF 인쇄를 특정 외부 사이트에서 받아오는 형식으로 만드는 대신, pdfkit을 이용하여 자체적으로 출력하도록 개발하였다. 또한, 멀티프로세싱 관련 코드도 조금 더 개선하였다.</p>
+<p>그래도 오래 걸린다. 이전의 기억을 되돌려보면… 10만건 확인하는데 3시간이었나…? 아무튼 오래 걸린다. 물리적으로 어쩔 수 없다. 이 이상으로 빠르면 서버에서 접속을 끊었던걸로 기억한다</p>
+<h3 id="변경점"><a href="#변경점" class="headerlink" title="변경점?"></a>변경점?</h3><p>기존의 Goso Helper는 python의 pool을 이용하였다. 오래전 일이라 기억이 잘 안나긴 하지만, 당시 속도 문제와 신뢰성 문제가 존재했다. 그래서 Process로 변경하였다.</p>
+<p>변경하면서 대충 나혼자 쓰려고 만들었던 코드들도 개선을 조금 했는데… 귀찮기도 하고 시간이 너무 많이 드는 것 같아 적당히 고쳤다. 그래서 코드가 좀 엉망이다. 그래도 잘 돌아가니까…? 괜찮은가?</p>
+<h3 id="기능"><a href="#기능" class="headerlink" title="기능"></a>기능</h3><p>match_str에 리스트 형태로 키워드를 넣고, 시작 글번호와 끝 글번호를 넣어주면, 그 범위 내에서 게시글을 찾는다. 키워드를 가지고 있는 게시글의 경우에는 web archive 사이트로 보내고, PDF화 한다.</p>
+<p>두가지를 동시에 하는 이유는 어차피 고소하려면 PDF로 뽑아서 가야하고, Web archive 사이트로 보내서 백업본을 만드려는 이유다.</p>
+<h3 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h3><p><a href="https://github.com/y2sman/goso_helper" target="_blank" rel="noopener">https://github.com/y2sman/goso_helper</a></p>
+<h3 id="끝"><a href="#끝" class="headerlink" title="끝"></a>끝</h3><p>개선 버전은 정확히 확인을 못했다. 이전 버전으로는 게시글 10만건 까지 돌려봤었다. 하지만 이번 개선버전은 시간 부족으로 100개정도 까지만 확인했기 때문에, 너무 많으면 중간에 꺼질 수도 있다.</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Dev/">Dev</a>, <a class="has-link-grey -link" href="/tags/Python/">Python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/07/19/2020_07_19/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">디자인 초보의 험난한 디자인 개선기</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/12/25/2019_12_25/">
+                <span class="level-item">Twitch chat bot with python</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">댓글</h3>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/ko/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-comments" data-width="100%" data-href="http://y2sman.github.io/2019/12/30/2019_12_30/" data-num-posts="5"></div>
+
+    </div>
+</div>
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카탈로그
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#개요">
+        <span class="has-mr-6">1</span>
+        <span>개요</span>
+        </a></li><li>
+        <a class="is-flex" href="#GoSo-Helper">
+        <span class="has-mr-6">2</span>
+        <span>GoSo Helper?</span>
+        </a></li><li>
+        <a class="is-flex" href="#변경점">
+        <span class="has-mr-6">3</span>
+        <span>변경점?</span>
+        </a></li><li>
+        <a class="is-flex" href="#기능">
+        <span class="has-mr-6">4</span>
+        <span>기능</span>
+        </a></li><li>
+        <a class="is-flex" href="#사용법">
+        <span class="has-mr-6">5</span>
+        <span>사용법</span>
+        </a></li><li>
+        <a class="is-flex" href="#끝">
+        <span class="has-mr-6">6</span>
+        <span>끝</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Blog/">
+            <span class="level-start">
+                <span class="level-item">Blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Blog/Hexo/">
+            <span class="level-start">
+                <span class="level-item">Hexo</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Dev/">
+            <span class="level-start">
+                <span class="level-item">Dev</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Dev/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Dev/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/og_image.png" alt="GoSo Helper with python" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 y2sman&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="입력 하세요..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '포스트',
+                PAGES: '페이지',
+                CATEGORIES: '카테고리',
+                TAGS: '태그',
+                UNTITLED: '(제목없음)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

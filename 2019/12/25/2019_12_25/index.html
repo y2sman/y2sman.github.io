@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html  lang="ko">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.9.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Twitch chat bot with python - y2sman&#39;s blog</title>
+
+<script data-ad-client="ca-pub-7336202012687130" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+    <meta name="description" content="개요완성은 작년에 완성하여, 공개는 지금 하게되었다. 사실은 개인적으로 하고 있던 일에서 꼭 필요한 건 아니었지만, 막상 검색해보면 한글 자료는 많이 없어 이렇게 공개한다. 쉽게 만들었으니, 사용법 읽어보면 컴퓨터를 잘 못하는 사람도 사용할 수 있을 것이라고 믿는다. 채팅 Bot?트위치라는 방송 플랫폼에서는 이미 많은 좋은 채팅 관리용 도구(싹둑, 나이트봇">
+<meta name="keywords" content="Dev,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Twitch chat bot with python">
+<meta property="og:url" content="http://y2sman.github.io/2019/12/25/2019_12_25/index.html">
+<meta property="og:site_name" content="y2sman&#39;s blog">
+<meta property="og:description" content="개요완성은 작년에 완성하여, 공개는 지금 하게되었다. 사실은 개인적으로 하고 있던 일에서 꼭 필요한 건 아니었지만, 막상 검색해보면 한글 자료는 많이 없어 이렇게 공개한다. 쉽게 만들었으니, 사용법 읽어보면 컴퓨터를 잘 못하는 사람도 사용할 수 있을 것이라고 믿는다. 채팅 Bot?트위치라는 방송 플랫폼에서는 이미 많은 좋은 채팅 관리용 도구(싹둑, 나이트봇">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="http://y2sman.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2020-07-15T17:21:12.488Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Twitch chat bot with python">
+<meta name="twitter:description" content="개요완성은 작년에 완성하여, 공개는 지금 하게되었다. 사실은 개인적으로 하고 있던 일에서 꼭 필요한 건 아니었지만, 막상 검색해보면 한글 자료는 많이 없어 이렇게 공개한다. 쉽게 만들었으니, 사용법 읽어보면 컴퓨터를 잘 못하는 사람도 사용할 수 있을 것이라고 믿는다. 채팅 Bot?트위치라는 방송 플랫폼에서는 이미 많은 좋은 채팅 관리용 도구(싹둑, 나이트봇">
+<meta name="twitter:image" content="http://y2sman.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85201507-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85201507-2');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/og_image.png" alt="Twitch chat bot with python" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="검색" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-25T09:31:23.000Z">2019-12-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Dev/">Dev</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6분 읽기 (나에 대하여 956 단어)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Twitch chat bot with python
+            
+        </h1>
+        <div class="content">
+            <h3 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h3><p>완성은 작년에 완성하여, 공개는 지금 하게되었다. 사실은 개인적으로 하고 있던 일에서 꼭 필요한 건 아니었지만, 막상 검색해보면 한글 자료는 많이 없어 이렇게 공개한다.</p>
+<p>쉽게 만들었으니, 사용법 읽어보면 컴퓨터를 잘 못하는 사람도 사용할 수 있을 것이라고 믿는다.</p>
+<h3 id="채팅-Bot"><a href="#채팅-Bot" class="headerlink" title="채팅 Bot?"></a>채팅 Bot?</h3><p>트위치라는 방송 플랫폼에서는 이미 많은 좋은 채팅 관리용 도구(싹둑, 나이트봇)가 있다. 19년 1월부터는 모더레이터 권한을 가진 유저라면, 특정 유저의 채팅 로그를 확인할 수 있는 기능도 추가되었다.</p>
+<p>하지만 문제는 대부분의 이용자들은 이러한 기능들의 EASY 버전만 사용한다는 것이다. 사실 이러한 봇을 추가로 사용할 이유가 없는데도, 대부분의 모더레이터들에게 나이트봇 메세지 수정 권한이 없기 때문에 추가적으로 사용하는 것도 이와 같다. (싹둑이는 모르겠다. 이런 기능이 존재하는지)</p>
+<p>뭐… 그냥 개인 봇을 사용하는 것이 좋아서 그럴 수도 있고.</p>
+<h3 id="기능"><a href="#기능" class="headerlink" title="기능"></a>기능</h3><p>사실 기능을 구상할 단계에서는 이제는 공식 기능으로 추가된 채팅 로그를 확인 할 수 있는 등의 여러가지 기능도 구상하였는데… 너무 늦게 만들었다.</p>
+<p>특별한 기능은 없고, 머릿속에 있던 채팅 봇의 필수 기능에다가 자동 백업 기능만 추가했다. 기본은 트위치에서 제공하는 샘플 코드 <a href="https://github.com/twitchdev/chat-samples" target="_blank" rel="noopener">GitHub - twitchdev/chat-samples</a>에서 가져왔다. 그냥 약간 수정해서 필수 기능만 만들었다.</p>
+<h3 id="문제점"><a href="#문제점" class="headerlink" title="문제점?"></a>문제점?</h3><p>작동에는 문제가 없다. 어쩌다보니 공개가 늦어져서, 테스트 기간을 1년 넘게 가졌고 자잘한 버그들은 이미 다 수정했다.</p>
+<p>걱정되는 부분중에 하나는 IRC의 tags를 핸들링 하는 코드를 짜기 귀찮아서… 그냥 처리했다. 혹시 모더레이터가 명령어를 수정하지 못할 수도 있다. 그런 경우엔… 트위치에서 API를 바꾼 경우라… 수동으로 고쳐야한다.</p>
+<p>그래도 1년간 딱 1번 있었던 경우라 가용성에는 문제가 없을 것 같다. 시간 나면… 추가하겠다.</p>
+<h3 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h3><p>사용하기 전에 여러가지 선작업이 필요하다. 당연히 본인 계정에서 돌릴 것이 아니라면, bot 계정을 만들어야한다. 그리고 Oauth를 발급받고, 봇을 등록하는 과정을 거쳐야하는데…</p>
+<p><a href="https://steemit.com/kr-dev/@maanya/20" target="_blank" rel="noopener">챗봇 만들기 20분만에 트위치 챗봇 만들기! — Steemit</a></p>
+<p>그건 그냥 이렇게 다른 블로그에서도 설명하고 있으니, 보고 따라하면 된다. 사이트 디자인만 달라졌으니 여기서는 설명하지 않겠다.</p>
+<p>그리고 가능하다면 봇에 모더레이터 권한을 발급하는 것을 주는 것을 추천한다. 초당 메세지 전송 갯수가 정해져있는데, 모더레이터의 경우 이런 경우에 일반 유저보다 더 많은 메세지를 전송할 수 있다.</p>
+<h3 id="진짜-사용법"><a href="#진짜-사용법" class="headerlink" title="진짜 사용법"></a>진짜 사용법</h3><p><a href="https://github.com/y2sman/twitch-chat-bot" target="_blank" rel="noopener">https://github.com/y2sman/twitch-chat-bot</a></p>
+<h3 id="끝"><a href="#끝" class="headerlink" title="끝"></a>끝</h3><p>끝! 사실 전공자 입장에서는 되게 쉬운 작업이다. 그래도 다른 일 하면서 문의하는 사람들이 꽤 있어서… 늦었지만 공개하게 되었는데, 문제 없이 잘 돌아갔으면 좋겠다!</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Dev/">Dev</a>, <a class="has-link-grey -link" href="/tags/Python/">Python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/12/30/2019_12_30/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">GoSo Helper with python</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/27/2019_08_27/">
+                <span class="level-item">Hexo &amp; Icarus 블로그 시작</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">댓글</h3>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/ko/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-comments" data-width="100%" data-href="http://y2sman.github.io/2019/12/25/2019_12_25/" data-num-posts="5"></div>
+
+    </div>
+</div>
+</div>
+                
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-3 column-right is-sticky">
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카탈로그
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#개요">
+        <span class="has-mr-6">1</span>
+        <span>개요</span>
+        </a></li><li>
+        <a class="is-flex" href="#채팅-Bot">
+        <span class="has-mr-6">2</span>
+        <span>채팅 Bot?</span>
+        </a></li><li>
+        <a class="is-flex" href="#기능">
+        <span class="has-mr-6">3</span>
+        <span>기능</span>
+        </a></li><li>
+        <a class="is-flex" href="#문제점">
+        <span class="has-mr-6">4</span>
+        <span>문제점?</span>
+        </a></li><li>
+        <a class="is-flex" href="#사용법">
+        <span class="has-mr-6">5</span>
+        <span>사용법</span>
+        </a></li><li>
+        <a class="is-flex" href="#진짜-사용법">
+        <span class="has-mr-6">6</span>
+        <span>진짜 사용법</span>
+        </a></li><li>
+        <a class="is-flex" href="#끝">
+        <span class="has-mr-6">7</span>
+        <span>끝</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                카테고리
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Blog/">
+            <span class="level-start">
+                <span class="level-item">Blog</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Blog/Hexo/">
+            <span class="level-start">
+                <span class="level-item">Hexo</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Dev/">
+            <span class="level-start">
+                <span class="level-item">Dev</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Dev/Python/">
+            <span class="level-start">
+                <span class="level-item">Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Dev/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/og_image.png" alt="Twitch chat bot with python" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 y2sman&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("ko");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="입력 하세요..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '포스트',
+                PAGES: '페이지',
+                CATEGORIES: '카테고리',
+                TAGS: '태그',
+                UNTITLED: '(제목없음)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
