@@ -172,7 +172,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2021/03/16/2021.03.16/">ReactNative로 간단한 앱 만들기 파트1</a>
+                <a class="has-link-black-ter" href="/2021/03/16/2021_03_16/">ReactNative로 간단한 앱 만들기 파트1</a>
             
         </h1>
         <div class="content">
@@ -207,9 +207,9 @@
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TomTom</span>:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span></span><br><span class="line">        print(<span class="hljs-string">"---Starting TomTom---"</span>)</span><br><span class="line">        self.uid = []</span><br><span class="line">        self.storelist = []</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GetUid</span><span class="hljs-params">(self)</span>:</span></span><br><span class="line">        post = urllib.parse.urlencode(&#123;<span class="hljs-string">'keyword'</span> : <span class="hljs-string">'서울'</span>, <span class="hljs-string">'info4_1'</span>: <span class="hljs-string">'24시간'</span>&#125;).encode(<span class="hljs-string">'UTF-8'</span>)</span><br><span class="line">        url = urllib.request.Request(<span class="hljs-string">"https://www.tomntoms.com/store/domestic_store_search.html"</span>, post)</span><br><span class="line">        url.add_header(<span class="hljs-string">"User-Agent"</span>, <span class="hljs-string">"Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko"</span>)</span><br><span class="line">        data = urllib.request.urlopen(url)</span><br><span class="line">        data = BeautifulSoup(data, features=<span class="hljs-string">"html.parser"</span>, from_encoding=<span class="hljs-string">'utf-8'</span>)</span><br><span class="line">        result = str(data.find_all(<span class="hljs-string">'script'</span>)[<span class="hljs-number">17</span>])</span><br><span class="line">        self.uid = re.findall(<span class="hljs-string">'\'([0-9]&#123;0,3&#125;)\''</span>, result)</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GetStoreInfo</span><span class="hljs-params">(self)</span>:</span></span><br><span class="line">        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> self.uid:</span><br><span class="line">            url = urllib.request.Request(<span class="hljs-string">"https://www.tomntoms.com/pop/pop_store_info.html?uid="</span>+str(i))</span><br><span class="line">            url.add_header(<span class="hljs-string">"User-Agent"</span>, <span class="hljs-string">"Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko"</span>)</span><br><span class="line">            data = urllib.request.urlopen(url)</span><br><span class="line">            data = BeautifulSoup(data, features=<span class="hljs-string">"html.parser"</span>, from_encoding=<span class="hljs-string">'utf-8'</span>)</span><br><span class="line">    </span><br><span class="line">            result_type = <span class="hljs-string">"C1"</span></span><br><span class="line">            result_name = data.find(<span class="hljs-string">'h2'</span>, class_=<span class="hljs-string">'tit'</span>)</span><br><span class="line">            result_location = data.find(<span class="hljs-string">'p'</span>, class_=<span class="hljs-string">'desc'</span>)</span><br><span class="line">            result_tel = data.find(<span class="hljs-string">'a'</span>, class_=<span class="hljs-string">'desc ff-roboto'</span>)</span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">#print(result_name.text, result_location.text, result_tel.text)</span></span><br><span class="line">            self.storelist += [&#123; <span class="hljs-string">'type'</span> : result_type, <span class="hljs-string">'name'</span> : result_name.text, <span class="hljs-string">'location'</span> : result_location.text, 			<span class="hljs-string">'tel'</span> : result_tel.text, <span class="hljs-string">'time'</span> : <span class="hljs-string">'24시간'</span> &#125;]</span><br><span class="line">        <span class="hljs-keyword">return</span> self.storelist</span><br></pre></td></tr></table></figure>
 
 <p>위가 탐앤탐스의 경우인데, 프랜차이즈 하나마다 클래스를 만드는 식으로 큰 틀을 잡았다. 대부분의 프랜차이즈들이 리스트에서는 세부정보(정확하게는 내가 필요한 정보들)를 보여주지 않고, 세부정보를 보여주는 페이지가 따로 있었다.</p>
-<p><img src="/2021/03/16/2021.03.16/image-20210316161854675.png" alt="regexr 사이트님... 정말 감사합니다..."></p>
+<p><img src="/2021/03/16/2021_03_16/image-20210316161854675.png" alt="regexr 사이트님... 정말 감사합니다..."></p>
 <p>내가 필요한 정보가 “서울”내에서 “24시”영업을 하는 지점의 정보였기 때문에 리스트에서 해당 지점들의 uid를 1차적으로 수집한 뒤, uid를 바탕으로 세부정보를 조회하는 구조를 사용했다. 정규표현식을 사용하는게 오히려 더 편할 것 같아, 이번에는 많이 사용했다.</p>
-<p><img src="/2021/03/16/2021.03.16/image-20210316162045715.png" alt="여기서도 많이 배웠다."></p>
+<p><img src="/2021/03/16/2021_03_16/image-20210316162045715.png" alt="여기서도 많이 배웠다."></p>
 <p><a href="https://greeksharifa.github.io/%EC%A0%95%EA%B7%9C%ED%91%9C%ED%98%84%EC%8B%9D(re)/2018/07/20/regex-usage-01-basic/" target="_blank" rel="noopener">파이썬 정규표현식(re) 사용법</a> 에서도 많이 배웠다. 혹시라도 필요하다면 정리를 되게 잘 해둔 것 같으니 참고하면 좋을 것 같다. 어쨋든… 대부분의 경우엔 이런 방식으로 빠르게 구현이 가능했다. 문제는… 지속 가능한 크롤러로 바꿀때 고생은 좀 하겠지만… 공부 좀 하면 답이 나오겠지… 라고 생각하고 있다.</p>
 <h2 id="데이터-가공"><a href="#데이터-가공" class="headerlink" title="데이터 가공"></a>데이터 가공</h2><p>취합한 데이터들을 모두 모았으면 이제 가공을 해야한다. 가공이라고 해봤자 특별한 내용은 없다. 여러 프랜차이즈들의 정보를 취합하다보니 약간씩 수집한 데이터들의 차이가 존재했다.</p>
 <ul>
@@ -285,7 +285,7 @@
                         포스트
                     </p>
                     <p class="title has-text-weight-normal">
-                        6
+                        7
                     </p>
                 </div>
             </div>
@@ -373,7 +373,7 @@
                 <span class="level-item">Dev</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Dev/Python/">
@@ -381,7 +381,7 @@
                 <span class="level-item">Python</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Dev/React/">
@@ -423,7 +423,26 @@
         
         <article class="media">
             
-            <a href="/2021/03/16/2021.03.16/" class="media-left">
+            <a href="/2021/04/25/2021_04_25/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="나만의 &#39;solved.ac&#39; 티어 정리기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-04-25T08:35:19.000Z">2021-04-25</time></div>
+                    <a href="/2021/04/25/2021_04_25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">나만의 &#39;solved.ac&#39; 티어 정리기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/2021_03_16/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="ReactNative로 간단한 앱 만들기 파트1">
                 </p>
@@ -432,7 +451,7 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T17:14:22.000Z">2021-03-16</time></div>
-                    <a href="/2021/03/16/2021.03.16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ReactNative로 간단한 앱 만들기 파트1</a>
+                    <a href="/2021/03/16/2021_03_16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ReactNative로 간단한 앱 만들기 파트1</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/React/">React</a>
                     </p>
@@ -497,25 +516,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/25/2019_12_25/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Twitch chat bot with python">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-25T09:31:23.000Z">2019-12-25</time></div>
-                    <a href="/2019/12/25/2019_12_25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Twitch chat bot with python</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -527,6 +527,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2021/03/">
@@ -613,7 +624,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Dev/">
                         <span class="tag">Dev</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
@@ -634,7 +645,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Python/">
                         <span class="tag">Python</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -680,7 +691,26 @@
         
         <article class="media">
             
-            <a href="/2021/03/16/2021.03.16/" class="media-left">
+            <a href="/2021/04/25/2021_04_25/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="나만의 &#39;solved.ac&#39; 티어 정리기">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-04-25T08:35:19.000Z">2021-04-25</time></div>
+                    <a href="/2021/04/25/2021_04_25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">나만의 &#39;solved.ac&#39; 티어 정리기</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/03/16/2021_03_16/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="ReactNative로 간단한 앱 만들기 파트1">
                 </p>
@@ -689,7 +719,7 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-15T17:14:22.000Z">2021-03-16</time></div>
-                    <a href="/2021/03/16/2021.03.16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ReactNative로 간단한 앱 만들기 파트1</a>
+                    <a href="/2021/03/16/2021_03_16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ReactNative로 간단한 앱 만들기 파트1</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/React/">React</a>
                     </p>
@@ -754,25 +784,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/25/2019_12_25/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Twitch chat bot with python">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-25T09:31:23.000Z">2019-12-25</time></div>
-                    <a href="/2019/12/25/2019_12_25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Twitch chat bot with python</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Dev/">Dev</a> / <a class="has-link-grey -link" href="/categories/Dev/Python/">Python</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -784,6 +795,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/04/">
+                <span class="level-start">
+                    <span class="level-item">4월 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2021/03/">
@@ -870,7 +892,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Dev/">
                         <span class="tag">Dev</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
@@ -891,7 +913,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Python/">
                         <span class="tag">Python</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
